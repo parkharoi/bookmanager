@@ -22,7 +22,11 @@ public class SecurityConfig {
                 .csrf(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated());
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/serch").permitAll()
+                        .requestMatchers("/admin/**").authenticated()
+                        .anyRequest().denyAll()
+                );
 
         return http.build();
     }
