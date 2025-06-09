@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ResponseAddUser {
+public class ResponseAddLibraryUser {
     private boolean success;
 }

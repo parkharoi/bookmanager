@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class RequestAddUser {
+public class RequestAddLibraryUser {
     @NotBlank
     private String name;
 
