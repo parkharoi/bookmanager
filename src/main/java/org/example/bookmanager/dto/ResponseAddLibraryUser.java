@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class ResponseAddLibraryUser {
     private boolean success;
+    private String message;
 }
