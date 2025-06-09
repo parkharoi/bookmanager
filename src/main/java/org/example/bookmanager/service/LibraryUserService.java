@@ -13,7 +13,6 @@ public class LibraryUserService {
     private final LibraryUserRepository libraryUserRepository;
 
     public ResponseAddLibraryUser addLibraryUser(RequestAddLibraryUser request) {
-        // 중복 사용자 체크
         boolean exists = libraryUserRepository
                 .findByNameAndPhone(request.getName(), request.getPhone())
                 .isPresent();
@@ -22,7 +21,6 @@ public class LibraryUserService {
             return new ResponseAddLibraryUser(false, "이미 등록된 사용자입니다.");
         }
 
-        // 사용자 저장
         LibraryUser libraryUser = new LibraryUser();
         libraryUser.setName(request.getName());
         libraryUser.setPhone(request.getPhone());
