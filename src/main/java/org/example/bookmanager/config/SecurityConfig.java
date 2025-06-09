@@ -20,23 +20,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/serch").permitAll()
-                        .requestMatchers("/admin/**").authenticated()
+                        .requestMatchers("/", "/search").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().denyAll()
                 );
-
         return http.build();
     }
+
 
     @Bean
     public UserDetailsService users() {
         UserDetails user = User.builder()
                 .username("admin")
                 .password("{noop}1234")
-                .roles("USER")
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
