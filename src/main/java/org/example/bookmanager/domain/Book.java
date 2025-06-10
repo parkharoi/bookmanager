@@ -21,4 +21,8 @@ public class Book {
 
     @Column(nullable = false)
     private int price;
+
+    @Column(nullable = false)
+    private boolean available = true;
+
 }

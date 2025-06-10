@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,10 +22,6 @@ public class BookService {
     private final LoanRepository loanRepository;
 
     public ResponseAddBook addBook(RequestAddBook request) {
-        boolean exists = bookRepository.findByTitle(request.getTitle()).isPresent();
-        if (exists) {
-            return new ResponseAddBook(false, "이미 등록된 책 제목입니다.", null);
-        }
 
         Book book = new Book();
         book.setTitle(request.getTitle());
@@ -79,4 +76,11 @@ public class BookService {
             );
         }).toList();
     }
+
+    public List<Book> getAvailableBooks() {
+        return bookRepository.findAll().stream()
+                .filter(Book::isAvailable)
+                .collect(Collectors.toList());
+    }
+
 }

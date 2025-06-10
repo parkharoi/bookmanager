@@ -18,4 +18,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     // 모든 미반납 도서
     List<Loan> findByReturnedFalse();
+
+    boolean existsByUser_UserIdAndBook_IdAndReturnedFalse(Long userId, Long bookId);
+
 }

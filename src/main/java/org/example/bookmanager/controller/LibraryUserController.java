@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bookmanager.dto.user.LibraryUserDetailDto;
 import org.example.bookmanager.dto.user.RequestAddLibraryUser;
 import org.example.bookmanager.dto.user.ResponseAddLibraryUser;
+import org.example.bookmanager.service.BookService;
 import org.example.bookmanager.service.LibraryUserService;
 import org.example.bookmanager.service.LoanService;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ public class LibraryUserController {
 
     private final LibraryUserService libraryUserService;
     private final LoanService loanService;
+    private final BookService bookService;
 
     @GetMapping("/user/add")
     public  String getLibraryUser(Model model){
@@ -45,11 +47,13 @@ public class LibraryUserController {
 
     @GetMapping("/user/{id}")
     public String getUserDetail(@PathVariable Long id, Model model) {
-        LibraryUserDetailDto userDto= libraryUserService.getUserByID(id);
+        LibraryUserDetailDto userDto = libraryUserService.getUserByID(id);
         model.addAttribute("user", userDto);
         model.addAttribute("loans", loanService.getLoansByUserId(id));
+        model.addAttribute("availableBooks", bookService.getAvailableBooks());
         return "user/detail";
     }
+
 
     @PostMapping("/return")
     public String returnBook(@RequestParam Long loanId) {

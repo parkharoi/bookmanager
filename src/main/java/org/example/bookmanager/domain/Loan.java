@@ -1,4 +1,5 @@
 package org.example.bookmanager.domain;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,18 +10,22 @@ import java.time.LocalDate;
 @Setter
 @Entity
 public class Loan {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private LibraryUser user;
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Book book;
 
+    @ManyToOne(optional = false)
+    private LibraryUser user;
+
+    @Column(nullable = false)
     private LocalDate loanDate;
 
-    private LocalDate returnDate;
+    @Column(nullable = false)
+    private LocalDate dueDate;
 
-    private boolean returned;
+    @Column(nullable = false)
+    private boolean returned = false;
 }

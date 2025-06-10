@@ -22,7 +22,6 @@ public class BookController {
 
     private final BookService bookService;
     private final BookRepository bookRepository;
-
     @GetMapping("/book/add")
     public String getAddBook(Model model, HttpServletRequest request) {
         model.addAttribute("requestAddBook", new RequestAddBook());
@@ -31,13 +30,12 @@ public class BookController {
         return "book/addBook";
     }
 
-
     @PostMapping("/book/add")
     public String postAddBook(@ModelAttribute RequestAddBook requestAddBook) {
         ResponseAddBook result = bookService.addBook(requestAddBook);
         if (result.isSuccess()){
             return "redirect:/admin/book/"+ result.getBookId();
-        }else  {
+        } else  {
             return "book/addBook";
         }
     }
