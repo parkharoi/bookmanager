@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>책 상세 정보</title>
+</head>
+<body>
+<h2>책 상세 정보</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>제목</th>
+        <td th:text="${book.title}">책 제목</td>
+    </tr>
+    <tr>
+        <th>저자</th>
+        <td th:text="${book.author}">저자명</td>
+    </tr>
+    <tr>
+        <th>출판사</th>
+        <td th:text="${book.publisher}">출판사명</td>
+    </tr>
+    <tr>
+        <th>출간년도</th>
+        <td th:text="${book.publicationYear}">2025</td>
+    </tr>
+    <tr>
+        <th>가격</th>
+        <td th:text="|${book.price}원|">10000원</td>
+    </tr>
+</table>
+
+<br/>
+<a th:href="@{/admin/book/add}">새 책 등록</a>
+</body>
+</html>

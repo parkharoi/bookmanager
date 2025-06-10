@@ -2,8 +2,8 @@ package org.example.bookmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bookmanager.domain.LibraryUser;
-import org.example.bookmanager.dto.RequestAddLibraryUser;
-import org.example.bookmanager.dto.ResponseAddLibraryUser;
+import org.example.bookmanager.dto.user.RequestAddLibraryUser;
+import org.example.bookmanager.dto.user.ResponseAddLibraryUser;
 import org.example.bookmanager.repository.LibraryUserRepository;
 import org.springframework.stereotype.Service;
 

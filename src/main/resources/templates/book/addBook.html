@@ -7,7 +7,9 @@
 <body>
 <h2>책 등록 (관리자 전용)</h2>
 
-<form action="/admin/books/add" method="post">
+<form action="/admin/book/add" method="post" th:object="${requestAddBook}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
     <label>제목: <input type="text" name="title" required /></label><br/><br/>
     <label>저자: <input type="text" name="author" required /></label><br/><br/>
     <label>출판사: <input type="text" name="publisher" required /></label><br/><br/>

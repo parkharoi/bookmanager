@@ -1,4 +1,4 @@
-package org.example.bookmanager.dto;
+package org.example.bookmanager.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

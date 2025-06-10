@@ -19,6 +19,7 @@ public class Loan {
     private Book book;
 
     private LocalDate loanDate;
+
     private LocalDate returnDate;
 
     private boolean returned;

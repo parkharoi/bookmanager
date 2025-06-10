@@ -1,4 +1,4 @@
-package org.example.bookmanager.dto;
+package org.example.bookmanager.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
