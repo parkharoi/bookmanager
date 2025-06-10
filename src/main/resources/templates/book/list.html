@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 목록</title>
+</head>
+<body>
+<h2>도서 목록</h2>
+
+<table border="1" cellpadding="10">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>출판사</th>
+        <th>출간년도</th>
+        <th>가격</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${bookList}">
+        <td th:text="${book.id}">1</td>
+        <td>
+            <a th:href="@{/admin/book/{id}(id=${book.id})}" th:text="${book.title}">책 제목</a>
+        </td>
+        <td th:text="${book.author}">저자</td>
+        <td th:text="${book.publisher}">출판사</td>
+        <td th:text="${book.publicationYear}">2025</td>
+        <td th:text="${book.price} + '원'">10000원</td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a href="/admin/book/add">새 책 등록</a>
+</body>
+</html>

@@ -8,6 +8,8 @@ import org.example.bookmanager.dto.book.ResponseAddBook;
 import org.example.bookmanager.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class BookService {
@@ -44,4 +46,16 @@ public class BookService {
 
     }
 
+    public List<BookDetailDto> getAllBooks(){
+        return bookRepository.findAll().stream()
+                .map(book -> new BookDetailDto(
+                        book.getId(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getPublisher(),
+                        book.getPublicationYear(),
+                        book.getPrice()
+                ))
+                .toList();
+    }
 }

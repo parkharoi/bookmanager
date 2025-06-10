@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -28,7 +30,6 @@ public class BookController {
 
 
     @PostMapping("/book/add")
-
     public String postAddBook(@ModelAttribute RequestAddBook requestAddBook) {
         ResponseAddBook result = bookService.addBook(requestAddBook);
         if (result.isSuccess()){
@@ -43,5 +44,12 @@ public class BookController {
         BookDetailDto book = bookService.getBookDetail(id);
         model.addAttribute("book", book);
         return "book/detail";
+    }
+
+    @GetMapping("/book/list")
+    public String getBookList(Model model) {
+        List<BookDetailDto> bookList = bookService.getAllBooks();
+        model.addAttribute("bookList", bookList);
+        return "book/list";
     }
 }
