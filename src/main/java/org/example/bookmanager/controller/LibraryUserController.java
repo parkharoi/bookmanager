@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -54,6 +56,13 @@ public class LibraryUserController {
         Long userId = loanService.getUserIdByLoanId(loanId);
         loanService.returnBook(loanId);
         return "redirect:/admin/user/" + userId;
+    }
+
+    @GetMapping("/user/list")
+    public String listUsers(Model model) {
+        List<LibraryUserDetailDto> users = libraryUserService.getAllUsers();
+        model.addAttribute("users", users);
+        return"user/list";
     }
 
 }

@@ -8,6 +8,9 @@ import org.example.bookmanager.dto.user.ResponseAddLibraryUser;
 import org.example.bookmanager.repository.LibraryUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class LibraryUserService {
@@ -44,4 +47,17 @@ public class LibraryUserService {
                 user.getPhone(),
                 user.getMemo());
     }
+
+    public List<LibraryUserDetailDto> getAllUsers() {
+        return libraryUserRepository.findAll()
+                .stream()
+                .map(user -> new LibraryUserDetailDto(
+                        user.getUserId(),
+                        user.getName(),
+                        user.getPhone(),
+                        user.getMemo() // 또는 note
+                ))
+                .collect(Collectors.toList());
+    }
+
 }
