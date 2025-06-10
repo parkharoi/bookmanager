@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>도서 목록</title>
@@ -16,6 +16,7 @@
         <th>출판사</th>
         <th>출간년도</th>
         <th>가격</th>
+        <th>대출 상태</th>
     </tr>
     </thead>
     <tbody>
@@ -27,7 +28,8 @@
         <td th:text="${book.author}">저자</td>
         <td th:text="${book.publisher}">출판사</td>
         <td th:text="${book.publicationYear}">2025</td>
-        <td th:text="${book.price} + '원'">10000원</td>
+        <td th:text="|${book.price}원|">10000원</td>
+        <td th:text="${book.loanStatus}">대출 가능</td>
     </tr>
     </tbody>
 </table>
