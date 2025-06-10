@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LoanRepository extends JpaRepository<Loan, Long> {
-    //해당 책 대출 확인
+    // 해당 책 대출 확인
     Optional<Loan> findByBook_IdAndReturnedFalse(Long bookId);
 
-    //특정 사용자 대출 내역 전체
-    List<Loan> findByUser_Id(Long userId);
+    // 특정 사용자 대출 내역 전체
+    List<Loan> findByUser_UserId(Long userId);
 
-    //특정 사용자 현재 대출 도서
-    List<Loan> findByUser_IdAndReturnedFalse(Long userId);
+    // 특정 사용자 현재 대출 도서
+    List<Loan> findByUser_UserIdAndReturnedFalse(Long userId);
 
-    //모든 미반납 도서
+    // 모든 미반납 도서
     List<Loan> findByReturnedFalse();
 }

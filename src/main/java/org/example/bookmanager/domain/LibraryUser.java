@@ -13,7 +13,7 @@ import java.util.List;
 public class LibraryUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @OneToMany(mappedBy = "user")
     private List<Loan> loans = new ArrayList<>();

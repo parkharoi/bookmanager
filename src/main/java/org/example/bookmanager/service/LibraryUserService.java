@@ -2,6 +2,7 @@ package org.example.bookmanager.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.bookmanager.domain.LibraryUser;
+import org.example.bookmanager.dto.user.LibraryUserDetailDto;
 import org.example.bookmanager.dto.user.RequestAddLibraryUser;
 import org.example.bookmanager.dto.user.ResponseAddLibraryUser;
 import org.example.bookmanager.repository.LibraryUserRepository;
@@ -18,7 +19,7 @@ public class LibraryUserService {
                 .isPresent();
 
         if (exists) {
-            return new ResponseAddLibraryUser(false, "이미 등록된 사용자입니다.");
+            return new ResponseAddLibraryUser(false, "이미 등록된 사용자입니다.", null);
         }
 
         LibraryUser libraryUser = new LibraryUser();
@@ -26,9 +27,21 @@ public class LibraryUserService {
         libraryUser.setPhone(request.getPhone());
         libraryUser.setMemo(request.getMemo());
 
-        libraryUserRepository.save(libraryUser);
+        LibraryUser savedUser = libraryUserRepository.save(libraryUser);
 
-        return new ResponseAddLibraryUser(true, "성공적으로 등록되었습니다.");
+        // 저장된 사용자 ID 포함하여 반환
+        return new ResponseAddLibraryUser(true, "성공적으로 등록되었습니다.", savedUser.getUserId());
     }
 
+
+    public LibraryUserDetailDto getUserByID(Long id) {
+        LibraryUser user = libraryUserRepository.findById(id)
+                .orElseThrow(()-> new IllegalArgumentException("사용자 찾을 수 없음"));
+
+        return new LibraryUserDetailDto(
+                user.getUserId(),
+                user.getName(),
+                user.getPhone(),
+                user.getMemo());
+    }
 }

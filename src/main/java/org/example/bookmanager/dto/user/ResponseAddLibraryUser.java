@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ResponseAddLibraryUser {
     private boolean success;
     private String message;
+    private Long userId;
 }

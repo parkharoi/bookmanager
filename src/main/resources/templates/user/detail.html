@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 상세 정보</title>
+</head>
+<body>
+<h2>👤 사용자 정보</h2>
+
+<table border="1" cellpadding="10">
+    <tr><th>이름</th><td th:text="${user.name}">홍길동</td></tr>
+    <tr><th>전화번호</th><td th:text="${user.phone}">010-1234-5678</td></tr>
+    <tr><th>메모</th><td th:text="${user.memo}">학생</td></tr>
+</table>
+
+<h3>📚 대출 현황</h3>
+
+<table border="1" cellpadding="10">
+    <thead>
+    <tr>
+        <th>도서 제목</th>
+        <th>대출일</th>
+        <th>반납 기한</th>
+        <th>반납 여부</th>
+        <th>연체 여부</th>
+        <th>반납 처리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loan : ${loans}">
+        <td th:text="${loan.bookTitle}">책 제목</td>
+        <td th:text="${loan.loanDate}">2025-06-01</td>
+        <td th:text="${loan.dueDate}">2025-06-16</td>
+        <td th:text="${loan.returned ? '반납 완료' : '대출 중'}">대출 중</td>
+        <td th:text="${!loan.returned and loan.dueDate < T(java.time.LocalDate).now() ? '연체' : '-'}">-</td>
+        <td>
+            <form th:action="@{/admin/return}" method="post" th:if="${!loan.returned}">
+                <input type="hidden" name="loanId" th:value="${loan.getUserId()}" />
+                <button type="submit">반납하기</button>
+            </form>
+            <span th:if="${loan.returned}">-</span>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(loans)}">
+        <td colspan="6">대출 기록이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
+<br/>
+<a href="/admin/user/edit" th:href="@{/admin/user/edit/{id}(id=${user.userID})}">사용자 정보 수정</a>
+<a href="/admin">← 관리자 홈으로</a>
+
+</body>
+</html>
