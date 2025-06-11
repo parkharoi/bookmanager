@@ -14,8 +14,12 @@ public class LoanDetailDto {
     private Long loanId;
     private String bookTitle;
     private LocalDate loanDate;
+    //반납일
     private LocalDate dueDate;
-    private LocalDate returnDate; // 실제 반납일 필드 추가
+    //실제 반납일
+    private LocalDate returnDate;
+    //반납 했는가
     private boolean returned;
-    private boolean overdue; // 연체 여부 필드 추가 (LoanService에서 설정)
+    //연체 여부
+    private boolean overdue;
 }

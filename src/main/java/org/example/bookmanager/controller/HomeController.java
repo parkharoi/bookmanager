@@ -1,10 +1,8 @@
-// src/main/java/org/example/bookmanager/controller/HomeController.java
-
 package org.example.bookmanager.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bookmanager.dto.book.BookDetailDto; // BookDetailDto 임포트
-import org.example.bookmanager.service.BookService; // BookService 임포트
+import org.example.bookmanager.dto.book.BookDetailDto;
+import org.example.bookmanager.service.BookService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

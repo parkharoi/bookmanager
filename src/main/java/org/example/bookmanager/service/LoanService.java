@@ -16,8 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -48,10 +46,6 @@ public class LoanService {
                 .toList();
     }
 
-    /**
-     * 도서를 반납 처리합니다.
-     * @param loanId 반납할 대출 기록의 ID
-     */
     @Transactional
     public void returnBook(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
@@ -69,11 +63,6 @@ public class LoanService {
         bookRepository.save(book);
     }
 
-    /**
-     * 특정 대출 기록의 사용자 ID를 조회합니다.
-     * @param loanId 대출 기록 ID
-     * @return 사용자 ID
-     */
     @Transactional(readOnly = true)
     public Long getUserIdByLoanId(Long loanId) {
         return loanRepository.findById(loanId)
@@ -81,27 +70,18 @@ public class LoanService {
                 .orElseThrow(() -> new IllegalArgumentException("대출 정보를 찾을 수 없습니다. (ID: " + loanId + ")"));
     }
 
-    /**
-     * 사용자에게 도서를 대출 처리합니다.
-     * @param userId 대출할 사용자의 ID
-     * @param bookId 대출할 도서의 ID
-     * @return ResponseLoan DTO (성공/실패 메시지 및 대출 ID)
-     */
     @Transactional
     public ResponseLoan loanBook(Long userId, Long bookId) {
         // 1. 사용자 존재 여부 확인
         LibraryUser user = libraryUserRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. (ID: " + userId + ")"));
 
-        // --- 새로 추가되는 연체 사용자 대출 금지 로직 ---
         // 2. 사용자가 연체 중인 대출이 있는지 확인
         boolean userIsOverdue = loanRepository.findByUser_UserId(userId).stream()
                 .anyMatch(Loan::isOverdue); // Loan 엔티티의 isOverdue() 사용
         if (userIsOverdue) {
             return new ResponseLoan(false, "연체 중인 사용자는 도서를 대출할 수 없습니다.", null);
         }
-        // --- 연체 사용자 대출 금지 로직 끝 ---
-
 
         // 3. 책 존재 여부 확인
         Book book = bookRepository.findById(bookId)
@@ -119,7 +99,7 @@ public class LoanService {
 
         // 6. 대출일 및 반납 기한 계산
         LocalDate loanDate = LocalDate.now();
-        LocalDate dueDate = loanDate.plusDays(15); // 대출일로부터 15일 후
+        LocalDate dueDate = loanDate.plusDays(15);
 
         // 7. Loan 엔티티 생성 및 저장
         Loan loan = new Loan(book, user, loanDate, dueDate);

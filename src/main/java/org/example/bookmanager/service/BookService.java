@@ -24,15 +24,9 @@ public class BookService {
     private final BookRepository bookRepository;
     private final LoanRepository loanRepository;
 
-    /**
-     * 새로운 책을 등록합니다.
-     * @param request 책 추가 요청 DTO
-     * @return 책 추가 결과 응답 DTO
-     */
+
     @Transactional
     public ResponseAddBook addBook(RequestAddBook request) {
-        // --- 수정된 부분: 잘못된 BookRepository 인터페이스 정의 코드가 완전히 제거되었습니다. ---
-        // 책 제목, 저자, 출판사를 기준으로 중복 책 검사
         if (bookRepository.findByTitleAndAuthorAndPublisher(request.getTitle(), request.getAuthor(), request.getPublisher()).isPresent()) {
             return new ResponseAddBook(false, "이미 존재하는 책입니다.", null);
         }
@@ -50,37 +44,11 @@ public class BookService {
         return new ResponseAddBook(true, "책이 성공적으로 등록되었습니다.", savedBook.getId());
     }
 
-    /**
-     * 특정 책의 상세 정보를 조회합니다.
-     * @param id 조회할 책의 ID
-     * @return 책 상세 정보 DTO
-     */
     @Transactional(readOnly = true)
     public BookDetailDto getBookDetail(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("책을 찾을 수 없습니다: " + id));
         return convertToDto(book);
-    }
-
-    /**
-     * 기존 책 정보를 업데이트합니다.
-     * @param id 업데이트할 책의 ID
-     * @param updatedBookForm 업데이트할 책 정보 (폼에서 넘어온 데이터)
-     */
-    @Transactional
-    public void updateBook(Long id, Book updatedBookForm) {
-        Book existingBook = bookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 책이 존재하지 않습니다: " + id));
-
-        existingBook.setTitle(updatedBookForm.getTitle());
-        existingBook.setAuthor(updatedBookForm.getAuthor());
-        existingBook.setPublisher(updatedBookForm.getPublisher());
-        existingBook.setPublicationYear(updatedBookForm.getPublicationYear());
-        existingBook.setPrice(updatedBookForm.getPrice());
-        // available 필드도 업데이트 로직에 포함될 수 있습니다. (예: existingBook.setAvailable(updatedBookForm.isAvailable());)
-        // 현재 BookController의 updateBook 에서는 available을 수정하지 않으므로 포함하지 않았습니다.
-
-        bookRepository.save(existingBook);
     }
 
     public List<BookDetailDto> getAllBooks() {
