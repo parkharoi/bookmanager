@@ -18,8 +18,7 @@ Spring Boot 기반의 간단한 도서 대출/반납 관리 웹 애플리케이�
 - JUnit5 (테스트 프레임워크)
 
 ## 🧩 ERD
-
-![스크린샷 2025-06-11 오후 7.17.17.png](..%2F..%2F..%2F..%2F..%2F..%2Fvar%2Ffolders%2F6z%2Fx_gnr7kd627gyzygfs_412yc0000gn%2FT%2FTemporaryItems%2FNSIRD_screencaptureui_zZ5rBs%2F%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202025-06-11%20%EC%98%A4%ED%9B%84%207.17.17.png)
+<img width="966" alt="스크린샷 2025-06-11 오후 3 33 05" src="https://github.com/user-attachments/assets/46e945b7-b42d-4c42-af9e-f98fbd6971a0" />
 
 
 ## ✅ 주요 기능
@@ -38,14 +37,18 @@ Spring Boot 기반의 간단한 도서 대출/반납 관리 웹 애플리케이�
 # 🔍 화면 기능
 
 ### 관리자 책 등록 📚
-![고객 책등록.gif](..%2F..%2F..%2F..%2FDownloads%2F%EA%B3%A0%EA%B0%9D%20%EC%B1%85%EB%93%B1%EB%A1%9D.gif)
+![고객 책등록](https://github.com/user-attachments/assets/dd1f1b0f-aa38-438d-880b-f17471c62907)
+
 
 ### 관리자 수정 및 리스트📚
-![책 수정.gif](..%2F..%2F..%2F..%2FDownloads%2F%EC%B1%85%20%EC%88%98%EC%A0%95.gif)
+![책 수정](https://github.com/user-attachments/assets/9dcc05ff-b6bd-4182-a15c-86e5ae6bc86b)
+
 
 ### 사용자 등록 및 대출/반납 👤
+![사용자도서대출](https://github.com/user-attachments/assets/4a251086-6d73-4417-b22c-2c82962785ab)
 
-![사용자도서대출.gif](..%2F..%2F..%2F..%2FDownloads%2F%EC%82%AC%EC%9A%A9%EC%9E%90%EB%8F%84%EC%84%9C%EB%8C%80%EC%B6%9C.gif)
+
 
 ### 도서관 사용자 도서 검색 🔍
-![도서관 사용자 도서 조회.gif](..%2F..%2F..%2F..%2FDownloads%2F%EB%8F%84%EC%84%9C%EA%B4%80%20%EC%82%AC%EC%9A%A9%EC%9E%90%20%EB%8F%84%EC%84%9C%20%EC%A1%B0%ED%9A%8C.gif)
+![도서관 사용자 도서 조회](https://github.com/user-attachments/assets/e0fb09bc-7afd-4522-b510-fd1ab480729f)
+
