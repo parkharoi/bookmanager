@@ -1,25 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>도서관 관리자 페이지 </title>
+    <title>도서관 관리자 페이지</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        h2 {
+            color: #0056b3;
+            margin-top: 40px; /* 섹션별 상단 여백 */
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        ul {
+            list-style: none; /* 기본 점 제거 */
+            padding: 0;
+            margin: 0;
+            margin-bottom: 30px; /* 목록 아래 여백 */
+        }
+        li {
+            margin-bottom: 15px; /* 리스트 아이템 간 여백 */
+        }
+        li a {
+            display: block; /* 링크 전체 영역 클릭 가능 */
+            background-color: #007bff;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-decoration: none; /* 밑줄 제거 */
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+        li a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        li a:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease-in-out;
+            font-size: 1em;
+        }
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>🔐 관리자 메뉴</h1>
 
-<h1>🔐 관리자 메뉴</h1>
+    <h2>도서 관리</h2>
+    <ul>
+        <li><a href="/admin/book/add">책 등록</a></li>
+        <li><a href="/admin/book/list">책 전체 조회</a></li>
+    </ul>
 
-<h2>도서 관리</h2>
-<ul>
-    <li><a href="/admin/book/add">책 등록</a></li>
-    <li><a href="/admin/book/list">책 전체 조회</a></li>
-</ul>
+    <h2>사용자 관리</h2>
+    <ul>
+        <li><a href="/admin/user/add">사용자 등록</a></li>
+        <li><a href="/admin/user/list">사용자 전체 조회</a></li>
+    </ul>
 
-<h2>사용자 관리</h2>
-<ul>
-    <li><a href="/admin/user/add">사용자 등록</a></li>
-    <li><a href="/admin/user/list">사용자 전체 조회</a></li>
-</ul>
-
+    <a href="/" class="back-link">메인으로 돌아가기</a>
+</div>
 </body>
 </html>
-

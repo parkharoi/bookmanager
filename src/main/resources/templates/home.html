@@ -1,21 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>도서 관리 시스템</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9eff5; /* 부드러운 배경색 */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column; /* 세로 정렬 */
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px 60px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* 부드러운 그림자 */
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+        }
+        h1 {
+            color: #2c3e50; /* 진한 회색 */
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #34495e; /* 중간 회색 */
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        button[type="submit"] {
+            background-color: #007bff; /* 파란색 버튼 */
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+            width: 80%; /* 버튼 너비 */
+            max-width: 300px;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3; /* 호버 시 진한 파란색 */
+            transform: translateY(-2px); /* 살짝 위로 */
+        }
+        button[type="submit"]:active {
+            transform: translateY(0); /* 클릭 시 원위치 */
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+    </style>
 </head>
 <body>
-<h1>도서관리 시스템</h1>
+<div class="container">
+    <h1>도서관리 시스템</h1>
 
-<h2>관리자 페이지</h2>
-<form action="/admin" >
-    <button type="submit">관리자 페이지</button>
-</form>
+    <h2>관리자 페이지</h2>
+    <form action="/admin" >
+        <button type="submit">관리자 페이지</button>
+    </form>
 
-<h2>사용자 검색</h2>
-<form action="/search">
-    <button type="submit">책 검색 페이지로 이동</button>
-</form>
-
+    <h2>사용자 검색</h2>
+    <form action="/search">
+        <button type="submit">책 검색 페이지로 이동</button>
+    </form>
+</div>
 </body>
 </html>

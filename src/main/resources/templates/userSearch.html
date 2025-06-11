@@ -124,8 +124,7 @@
     <h2>📚 도서 검색</h2>
 
     <div class="search-container">
-        <form th:action="@{/user/books}" method="get">
-            <label for="searchType">검색 기준:</label>
+        <form th:action="@{/search}" method="get"> <label for="searchType">검색 기준:</label>
             <select id="searchType" name="searchType">
                 <option value="title" th:selected="${searchType == 'title'}">제목</option>
                 <option value="author" th:selected="${searchType == 'author'}">저자</option>
@@ -138,8 +137,7 @@
     </div>
 
     <div class="sort-container">
-        <form id="sortForm" th:action="@{/user/books}" method="get">
-            <input type="hidden" name="searchType" th:value="${searchType}"/>
+        <form id="sortForm" th:action="@{/search}" method="get"> <input type="hidden" name="searchType" th:value="${searchType}"/>
             <input type="hidden" name="keyword" th:value="${keyword}"/>
 
             <label for="sortBy">정렬 기준:</label>
