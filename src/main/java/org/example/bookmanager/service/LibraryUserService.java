@@ -1,10 +1,12 @@
 package org.example.bookmanager.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.bookmanager.domain.LibraryUser;
 import org.example.bookmanager.dto.user.LibraryUserDetailDto;
 import org.example.bookmanager.dto.user.RequestAddLibraryUser;
 import org.example.bookmanager.dto.user.ResponseAddLibraryUser;
+import org.example.bookmanager.dto.user.UpdateLibraryUser;
 import org.example.bookmanager.repository.LibraryUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,15 @@ public class LibraryUserService {
                 user.getName(),
                 user.getPhone(),
                 user.getMemo());
+    }
+
+    @Transactional
+    public void updateLibraryUser(UpdateLibraryUser request) {
+        LibraryUser user = libraryUserRepository.findById(request.getId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + request.getId()));
+        user.setName(request.getName());
+        user.setPhone(request.getPhone());
+        user.setMemo(request.getMemo());
     }
 
     public List<LibraryUserDetailDto> getAllUsers() {

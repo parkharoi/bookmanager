@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 검색 및 목록</title>
+    <style>
+        /* 기존 CSS는 유지합니다. */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f8f9fa; color: #343a40; }
+        h2 { color: #007bff; text-align: center; margin-bottom: 30px; font-weight: 600; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .search-container, .sort-container {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: #fdfdfd;
+        }
+        .search-container form, .sort-container form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        .search-container label, .sort-container label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .search-container select, .sort-container select,
+        .search-container input[type="text"] {
+            padding: 10px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            flex-grow: 1;
+            max-width: 250px;
+            font-size: 0.95em;
+        }
+        .search-container button, .sort-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+        .search-container button:hover, .sort-container button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: left;
+            vertical-align: middle;
+            font-size: 0.9em;
+        }
+        th {
+            background-color: #e9ecef;
+            font-weight: bold;
+            color: #495057;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e2f0ff;
+        }
+        .loan-available {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .loan-unavailable {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2em;
+            color: #6c757d;
+            background-color: #fdfdfd;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+        .back-button {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📚 도서 검색</h2>
+
+    <div class="search-container">
+        <form th:action="@{/user/books}" method="get">
+            <label for="searchType">검색 기준:</label>
+            <select id="searchType" name="searchType">
+                <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                <option value="author" th:selected="${searchType == 'author'}">저자</option>
+                <option value="publisher" th:selected="${searchType == 'publisher'}">출판사</option>
+            </select>
+            <label for="keyword">검색어:</label>
+            <input type="text" id="keyword" name="keyword" th:value="${keyword}" placeholder="검색어를 입력하세요"/>
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <div class="sort-container">
+        <form id="sortForm" th:action="@{/user/books}" method="get">
+            <input type="hidden" name="searchType" th:value="${searchType}"/>
+            <input type="hidden" name="keyword" th:value="${keyword}"/>
+
+            <label for="sortBy">정렬 기준:</label>
+            <select id="sortBy" name="sortBy">
+                <option value="title" th:selected="${sortBy == 'title'}">제목</option>
+                <option value="author" th:selected="${sortBy == 'author'}">저자</option>
+                <option value="publicationYear" th:selected="${sortBy == 'publicationYear'}">출판년도</option>
+            </select>
+            <label for="sortOrder">정렬 순서:</label>
+            <select id="sortOrder" name="sortOrder">
+                <option value="asc" th:selected="${sortOrder == 'asc'}">오름차순</option>
+                <option value="desc" th:selected="${sortOrder == 'desc'}">내림차순</option>
+            </select>
+            <button type="submit">정렬 적용</button>
+        </form>
+    </div>
+
+    <h3>🔍 검색 결과</h3>
+
+    <table th:if="${!#lists.isEmpty(books)}">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>저자</th>
+            <th>출판사</th>
+            <th>출판년도</th>
+            <th>가격</th>
+            <th>대출 상태</th>
+            <th th:if="${showDueDate}">반납 기한</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">책 제목</td>
+            <td th:text="${book.author}">저자명</td>
+            <td th:text="${book.publisher}">출판사명</td>
+            <td th:text="${book.publicationYear}">2023</td>
+            <td th:text="|${book.price}원|">15000원</td>
+            <td>
+                        <span th:classappend="${book.loanStatus == '대출 가능' ? 'loan-available' : 'loan-unavailable'}"
+                              th:text="${book.loanStatus}">대출 가능</span>
+            </td>
+            <td th:if="${book.loanDueDate != null}" th:text="${book.loanDueDate}">2025-06-25</td>
+            <td th:if="${book.loanDueDate == null}">-</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(books)}" class="no-results">검색 결과가 없습니다.</p>
+
+    <a href="/" class="back-button">메인으로 돌아가기</a>
+</div>
+</body>
+</html>

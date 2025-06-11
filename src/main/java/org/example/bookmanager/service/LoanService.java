@@ -1,18 +1,23 @@
+// src/main/java/org/example/bookmanager/service/LoanService.java
+
 package org.example.bookmanager.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.bookmanager.domain.Book;
 import org.example.bookmanager.domain.LibraryUser;
 import org.example.bookmanager.domain.Loan;
 import org.example.bookmanager.dto.loan.LoanDetailDto;
+import org.example.bookmanager.dto.loan.ResponseLoan;
 import org.example.bookmanager.repository.BookRepository;
 import org.example.bookmanager.repository.LibraryUserRepository;
 import org.example.bookmanager.repository.LoanRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +27,12 @@ public class LoanService {
     private final BookRepository bookRepository;
     private final LibraryUserRepository libraryUserRepository;
 
-    // 사용자 id로 대출 내역 조회
+    /**
+     * 특정 사용자의 모든 대출 내역을 조회합니다.
+     * @param userId 사용자 ID
+     * @return LoanDetailDto 리스트
+     */
+    @Transactional(readOnly = true)
     public List<LoanDetailDto> getLoansByUserId(Long userId) {
         List<Loan> loans = loanRepository.findByUser_UserId(userId);
         return loans.stream()
@@ -30,71 +40,95 @@ public class LoanService {
                         loan.getId(),
                         loan.getBook().getTitle(),
                         loan.getLoanDate(),
-                        loan.getLoanDate().plusDays(15),
-                        loan.isReturned()
+                        loan.getDueDate(),
+                        loan.getReturnDate(),
+                        loan.isReturned(),
+                        loan.isOverdue()
                 ))
                 .toList();
     }
 
-    // 대출 반납 처리
+    /**
+     * 도서를 반납 처리합니다.
+     * @param loanId 반납할 대출 기록의 ID
+     */
     @Transactional
     public void returnBook(Long loanId) {
         Loan loan = loanRepository.findById(loanId)
-                .orElseThrow(() -> new IllegalArgumentException("대출 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("대출 정보를 찾을 수 없습니다. (ID: " + loanId + ")"));
 
         if (loan.isReturned()) {
             throw new IllegalStateException("이미 반납된 도서입니다.");
         }
 
+        loan.setReturnDate(LocalDate.now());
         loan.setReturned(true);
-        loanRepository.save(loan);
 
         Book book = loan.getBook();
-        book.setAvailable(true); // 도서 상태를 대출 가능으로 변경
+        book.setAvailable(true);
         bookRepository.save(book);
     }
 
-    // 대출 ID로 사용자 ID 조회
+    /**
+     * 특정 대출 기록의 사용자 ID를 조회합니다.
+     * @param loanId 대출 기록 ID
+     * @return 사용자 ID
+     */
+    @Transactional(readOnly = true)
     public Long getUserIdByLoanId(Long loanId) {
         return loanRepository.findById(loanId)
                 .map(loan -> loan.getUser().getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("대출 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("대출 정보를 찾을 수 없습니다. (ID: " + loanId + ")"));
     }
 
-    // 사용자에게 도서 대출 처리
+    /**
+     * 사용자에게 도서를 대출 처리합니다.
+     * @param userId 대출할 사용자의 ID
+     * @param bookId 대출할 도서의 ID
+     * @return ResponseLoan DTO (성공/실패 메시지 및 대출 ID)
+     */
     @Transactional
-    public void loanBookToUser(Long userId, Long bookId) {
-        // 대출 가능한 책 조회
-        Book book = bookRepository.findById(bookId) // ID로 바로 조회
-                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다."));
-
-        // 책이 이미 대출 불가능 상태인지 확인
-        if (!book.isAvailable()) {
-            throw new IllegalStateException("해당 도서는 현재 대출 불가 상태입니다.");
-        }
-
-        // 사용자 확인
+    public ResponseLoan loanBook(Long userId, Long bookId) {
+        // 1. 사용자 존재 여부 확인
         LibraryUser user = libraryUserRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. (ID: " + userId + ")"));
 
-        // 같은 책(ID 기준)이 이미 해당 사용자에게 대출 중인지 확인 (반납되지 않은 상태)
-        boolean alreadyLoaned = loanRepository.existsByUser_UserIdAndBook_IdAndReturnedFalse(userId, book.getId());
-        if (alreadyLoaned) {
-            throw new IllegalStateException("이미 해당 도서를 대출 중입니다.");
+        // --- 새로 추가되는 연체 사용자 대출 금지 로직 ---
+        // 2. 사용자가 연체 중인 대출이 있는지 확인
+        boolean userIsOverdue = loanRepository.findByUser_UserId(userId).stream()
+                .anyMatch(Loan::isOverdue); // Loan 엔티티의 isOverdue() 사용
+        if (userIsOverdue) {
+            return new ResponseLoan(false, "연체 중인 사용자는 도서를 대출할 수 없습니다.", null);
+        }
+        // --- 연체 사용자 대출 금지 로직 끝 ---
+
+
+        // 3. 책 존재 여부 확인
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("도서를 찾을 수 없습니다. (ID: " + bookId + ")"));
+
+        // 4. 책의 'available' 상태 확인
+        if (!book.isAvailable()) {
+            return new ResponseLoan(false, "해당 도서는 현재 대출 불가능 상태입니다.", null);
         }
 
-        // 대출 처리
-        Loan loan = new Loan();
-        loan.setBook(book);
-        loan.setUser(user);
-        loan.setLoanDate(LocalDate.now());
-        loan.setDueDate(LocalDate.now().plusDays(15));
-        loan.setReturned(false);
+        // 5. 같은 책(ID 기준)이 현재 다른 사용자에게 대출 중인지 확인 (반납되지 않은 상태)
+        if (loanRepository.findByBook_IdAndReturnedFalse(bookId).isPresent()) {
+            return new ResponseLoan(false, "해당 도서는 현재 다른 사용자에게 대출 중입니다.", null);
+        }
 
-        loanRepository.save(loan);
+        // 6. 대출일 및 반납 기한 계산
+        LocalDate loanDate = LocalDate.now();
+        LocalDate dueDate = loanDate.plusDays(15); // 대출일로부터 15일 후
 
-        // 도서 상태 갱신
-        book.setAvailable(false); // 도서 상태를 대출 불가로 변경
+        // 7. Loan 엔티티 생성 및 저장
+        Loan loan = new Loan(book, user, loanDate, dueDate);
+        Loan savedLoan = loanRepository.save(loan);
+
+        // 8. 도서 상태 갱신
+        book.setAvailable(false);
         bookRepository.save(book);
+
+        return new ResponseLoan(true, "도서 대출에 성공했습니다.", savedLoan.getId());
     }
 }

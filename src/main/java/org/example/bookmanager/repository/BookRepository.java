@@ -7,21 +7,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Optional<Book> findFirstByTitleContainingIgnoreCaseAndAvailableTrue(String title);
+    // 제목, 저자, 출판사를 기준으로 중복 책을 찾는 메소드 (addBook에서 사용)
+    Optional<Book> findByTitleAndAuthorAndPublisher(String title, String author, String publisher);
 
-    //ID로 대출 가능 도서 찾기
-    Optional<Book> findByIdAndAvailableTrue(Long id);
+    // 제목으로 검색 (대소문자 무시, 포함 여부)
+    List<Book> findByTitleContainingIgnoreCase(String title);
 
+    // 저자로 검색 (대소문자 무시, 포함 여부)
+    List<Book> findByAuthorContainingIgnoreCase(String author);
+
+    // 출판사로 검색 (대소문자 무시, 포함 여부)
+    List<Book> findByPublisherContainingIgnoreCase(String publisher);
+
+    // Book 엔티티의 'available' 필드가 true인 책 목록을 반환합니다.
     List<Book> findByAvailableTrue();
-
-
-    //키워드 기반 도서 검색(ID 또는 제목)
-    default Optional<Book> findAvailableBookByTitleOrId(String keyword) {
-        try {
-            Long id = Long.parseLong(keyword);
-            return findByIdAndAvailableTrue(id);
-        }catch (NumberFormatException e) {
-            return findFirstByTitleContainingIgnoreCaseAndAvailableTrue(keyword);
-        }
-    }
 }
